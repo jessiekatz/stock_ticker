@@ -2,7 +2,7 @@ var http = require('http');
 var url = require('url');
 const MongoClient = require('mongodb').MongoClient;
 
-// var port = process.env.PORT || 3000;
+var port = process.env.PORT || 3000;
 http.createServer(function (req, res) {
   res.writeHead(200, {'Content-Type': 'text/html'});
   if (req.url == "/") {
@@ -76,4 +76,4 @@ http.createServer(function (req, res) {
       });
     });
   }
-}).listen(8080);
+}).listen(port);
