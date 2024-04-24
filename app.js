@@ -1,7 +1,8 @@
 var http = require('http');
 var url = require('url');
 const MongoClient = require('mongodb').MongoClient;
-var port = process.env.PORT || 3000;
+
+// var port = process.env.PORT || 3000;
 http.createServer(function (req, res) {
   res.writeHead(200, {'Content-Type': 'text/html'});
   if (req.url == "/") {
@@ -22,7 +23,9 @@ http.createServer(function (req, res) {
     var userInput = formData.fileInput;
     
     //connect mongo
-    const connStr = "mongodb+srv://newuser:123@stock.1uj46pd.mongodb.net/?retryWrites=true&w=majority";
+    const connStr = process.env.MONGODB_URI;
+
+    
     MongoClient.connect(connStr, async function(err, db) {
       if(err) { 
         console.log(err);
