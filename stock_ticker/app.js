@@ -51,8 +51,6 @@ http.createServer(function (req, res) {
         if (err) { 
           console.log("Error: " + err); 
         } else {        
-            res.write('<!DOCTYPE html>');
-            res.write('<html>');
             res.write('<table>');
             res.write('<tr>');
             res.write('<th>Company</th>');
@@ -71,8 +69,6 @@ http.createServer(function (req, res) {
                 res.write('</tr>');
             });
             res.write('</table>');
-            res.write('</body>');
-            res.write('</html>');
         }
         db.close();
         res.end();
