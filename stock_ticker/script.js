@@ -1,37 +1,76 @@
+var http = require('http');
+var url = require('url');
 const MongoClient = require('mongodb').MongoClient;
-const fs = require("fs");
-var readline = require('readline');
-var myFile = readline.createInterface({
-        input: fs.createReadStream("C:\\Users\\jessk\\Downloads\\companies-1.csv")
-    });
 
-//counter to not add first title row
-let lineNum = 0;
-myFile.on('line', function (line) {
-
-    if (!(lineNum === 0)) {
-        //split by commas
-        let row = line.split(',');
-
-        //connect mongo
-        const connStr = "mongodb+srv://newuser:123@stock.1uj46pd.mongodb.net/?retryWrites=true&w=majority";
-        client = new MongoClient(connStr);
-        MongoClient.connect(connStr, async function(err, db) {
-        if(err) { return console.log(err); }
+http.createServer(function (req, res) {
+  res.writeHead(200, {'Content-Type': 'text/html'});
+  if (req.url == "/") {
+    res.write('<form method="GET" action="process">');
+    res.write('<input id="fileInput" type="text" name="fileInput" placeholder="Enter a ticker or company" required /><br>');
+    res.write('<input type="radio" id="Ticker" name="submission" value="ticker">');
+    res.write('<label for="ticker">Ticker</label>');
+    res.write('<input type="radio" id="company" name="submission" value="company">');
+    res.write('<label for="company">Company</label><br>');
+    res.write('<button id="submitBtn" type="submit">Submit</button>');
+    res.write('</form>');
+  
+  } else if (req.url.startsWith("/process")) {
     
-        //getting Stock database, publiccompanies collection
-        var dbo = db.db("Stock");
-        var collection = dbo.collection('PublicCompanies');
-        
-        //adding each row of data
-        var newData = {"company": row[0], "Ticker": row[1], "Price": row[2]};
-        await collection.insertOne(newData, function(err, res) {
-        if (err) { return console.log(err); }
-        console.log("new document inserted");
-        }); 
-    db.close();
-    });
-    }
-    lineNum++;
-});
+    var parsedUrl = url.parse(req.url, true);
+    var formData = parsedUrl.query;
+    var submissionType = formData.submission;
+    var userInput = formData.fileInput;
+    
+    //connect mongo
+    const connStr = "mongodb+srv://newuser:123@stock.1uj46pd.mongodb.net/?retryWrites=true&w=majority";
+    MongoClient.connect(connStr, async function(err, db) {
+      if(err) { 
+        console.log(err);
+        return;
+      }
 
+      //getting Stock database, publiccompanies collection
+      var dbo = db.db("Stock");
+      var coll = dbo.collection('PublicCompanies');
+
+      // Filter based on submission type
+      var filter = {};
+      if (submissionType === "ticker") {
+        filter.Ticker = userInput;
+      } else if (submissionType === "company") {
+        filter.company = userInput;
+      }
+
+      await coll.find(filter).toArray(async function(err, items) {
+        if (err) { 
+          console.log("Error: " + err); 
+        } else {        
+            res.write('<!DOCTYPE html>');
+            res.write('<html>');
+            res.write('<table>');
+            res.write('<tr>');
+            res.write('<th>Company</th>');
+            res.write('<th>Ticker</th>');
+            res.write('<th>Price</th>');
+            res.write('</tr>');
+            items.forEach(function(item) {   
+                console.log("Company:"+item.company);
+                console.log("Ticker:"+item.Ticker);
+                console.log("Price:"+item.Price);
+
+                res.write('<tr>');
+                res.write('<td>' + item.company + '</td>');
+                res.write('<td>' + item.Ticker + '</td>');
+                res.write('<td>' + item.Price + '</td>');
+                res.write('</tr>');
+            });
+            res.write('</table>');
+            res.write('</body>');
+            res.write('</html>');
+        }
+        db.close();
+        res.end();
+      });
+    });
+  }
+}).listen(8080);
