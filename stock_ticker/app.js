@@ -4,6 +4,12 @@ const MongoClient = require('mongodb').MongoClient;
 var port = process.env.PORT || 3000;
 http.createServer(function (req, res) {
   res.writeHead(200, {'Content-Type': 'text/html'});
+  if (req.url === '/favicon.ico') {
+    // Ignore requests to favicon.ico
+    res.writeHead(204); // No content response
+    res.end();
+    return;
+  }
   if (req.url == "/") {
     res.write('<form method="GET" action="process">');
     res.write('<input id="fileInput" type="text" name="fileInput" placeholder="Enter a ticker or company" required /><br>');
