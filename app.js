@@ -23,11 +23,11 @@ http.createServer(function (req, res) {
     var userInput = formData.fileInput;
     
     //connect mongo
-    const connStr = process.env.MONGODB_URI;
+    const connStr = "mongodb+srv://newuser:1@stock.1uj46pd.mongodb.net/?retryWrites=true&w=majorityy";
 
     
     MongoClient.connect(connStr, async function(err, db) {
-      if(err) { 
+      if (err) { 
         console.log(err);
         return;
       }
