@@ -15,7 +15,7 @@ http.createServer(function (req, res) {
     res.write('<button id="submitBtn" type="submit">Submit</button>');
     res.write('</form>');
   
-  } else if (req.url.startsWith("/process")) {
+  } else if (req.url("/process")) {
     
     var parsedUrl = url.parse(req.url, true);
     var formData = parsedUrl.query;
