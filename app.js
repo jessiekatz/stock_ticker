@@ -6,7 +6,7 @@ var port = process.env.PORT || 3000;
 http.createServer(function (req, res) {
   res.writeHead(200, {'Content-Type': 'text/html'});
   if (req.url == "/") {
-    res.write('<form method="GET" action="process">');
+    res.write('<form method="GET" action="https://stocks-13-e8e302bfe14a.herokuapp.com/process">');
     res.write('<input id="fileInput" type="text" name="fileInput" placeholder="Enter a ticker or company" required /><br>');
     res.write('<input type="radio" id="Ticker" name="submission" value="ticker">');
     res.write('<label for="ticker">Ticker</label>');
