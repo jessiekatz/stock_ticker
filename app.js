@@ -27,10 +27,13 @@ http.createServer(function (req, res) {
 
     
     MongoClient.connect(connStr, async function(err, db) {
+      console.log("after connect");
       if (err) { 
         console.log(err);
         return;
       }
+
+      console.log("after connect err");
 
       //getting Stock database, publiccompanies collection
       var dbo = db.db("Stock");
