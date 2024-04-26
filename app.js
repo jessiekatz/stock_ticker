@@ -3,7 +3,7 @@ const url = require('url');
 const MongoClient = require('mongodb').MongoClient;
 require('request');
 
-const port = process.env.PORT || 8080;
+const port = process.env.PORT || 3000;
 
 
 http.createServer(async function (req, res) {
