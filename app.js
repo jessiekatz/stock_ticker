@@ -79,8 +79,9 @@ http.createServer(async function (req, res) {
     const userInput = formData.fileInput;
 
     // Connect to MongoDB
-    const connStr = "mongodb+srv://newuser:1@stock.1uj46pd.mongodb.net/?retryWrites=true&w=majority";
 
+    const connStr = process.env.MONGODB_URI;
+    const apiKey = process.env.KEY;
     try {
       const client = await MongoClient.connect(connStr);
       const dbo = client.db("Stock");
@@ -141,15 +142,14 @@ http.createServer(async function (req, res) {
                 <td>${item.company}</td>
                 <td>${item.Ticker}</td>
                 <td>${item.Price}</td>`);
-        
-        var urlS = `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${item.Ticker}&apikey=9MC1EZH7GNMDH6L2`;
+                
+        var urlS = `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${item.Ticker}&apikey=${apiKey}`;
         let dh;
         async function fetchData() {
             try {
               const response = await fetch(urlS);
               const data = await response.json();
               console.log(data);
-            //   dh = data['Global Quote']['03. high'];
             } catch (error) {
               console.error('Error fetching data:', error);
             }
