@@ -11,7 +11,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "mongodb": "^6.5.0"
+    "mongodb": "^6.5.0",
+    "request": "^2.88.2"
   },
   "homepage": "https://stocks-13-e8e302bfe14a.herokuapp.com/"
 }
